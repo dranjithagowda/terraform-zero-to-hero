@@ -9,7 +9,7 @@ variable "cidr" {
 
 resource "aws_key_pair" "example" {
   key_name   = "terraform-demo-chinmai"  # Replace with your desired key name
-  public_key = file("~/.ssh/id_ed25519.pub")  # Replace with the path to your public key file
+  public_key = file("~/.ssh/id_rsa.pub")  # Replace with the path to your public key file
 }
 
 resource "aws_vpc" "myvpc" {
@@ -24,26 +24,26 @@ resource "aws_subnet" "sub1" {
 }
 
 resource "aws_internet_gateway" "igw" {
-  vpc_id = vpc-04a7169d1c305bff8
+  vpc_id = aws_vpc.myvpc.id
 }
 
 resource "aws_route_table" "RT" {
-  vpc_id = vpc-04a7169d1c305bff8
+  vpc_id = aws_vpc.myvpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = igw-0e57faa6dae8f962f
+    gateway_id = aws_internet_gateway.igw.id
   }
 }
 
 resource "aws_route_table_association" "rta1" {
-  subnet_id      = subnet-0283e537af8b7a51c
-  route_table_id = subnet-0283e537af8b7a51c
+  subnet_id      = aws_subnet.sub1.id
+  route_table_id = aws_route_table.RT.id
 }
 
 resource "aws_security_group" "webSg" {
   name   = "web"
-  vpc_id = vpc-04a7169d1c305bff8
+  vpc_id = aws_vpc.myvpc.id
 
   ingress {
     description = "HTTP from VPC"
@@ -76,13 +76,13 @@ resource "aws_instance" "server" {
   ami                    = "ami-0521cb2d60cfbb1a6"
   instance_type          = "t3.micro"
   key_name      = aws_key_pair.example.key_name
-  vpc_security_group_ids = ["sg-0a010a20127d34e45"]
-subnet_id              = "subnet-0283e537af8b7a51c"
+  vpc_security_group_ids = [sg-0a010a20127d34e45]
+  subnet_id              = subnet-03465ffb835f65865
 
   connection {
     type        = "ssh"
     user        = "ubuntu"  # Replace with the appropriate username for your EC2 instance
-    private_key = file("~/.ssh/id_ed25519")  # Replace with the path to your private key
+    private_key = file("~/.ssh/id_rsa")  # Replace with the path to your private key
     host        = self.public_ip
   }
 
@@ -103,4 +103,3 @@ subnet_id              = "subnet-0283e537af8b7a51c"
     ]
   }
 }
-
