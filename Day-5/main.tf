@@ -76,8 +76,8 @@ resource "aws_instance" "server" {
   ami                    = "ami-0521cb2d60cfbb1a6"
   instance_type          = "t3.micro"
   key_name      = aws_key_pair.example.key_name
-  vpc_security_group_ids = [sg-0a010a20127d34e45]
-  subnet_id              = subnet-03465ffb835f65865
+  vpc_security_group_ids = ["sg-0a010a20127d34e45"]
+  subnet_id              = "subnet-03465ffb835f65865"
 
   connection {
     type        = "ssh"
