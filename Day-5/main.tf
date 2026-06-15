@@ -24,26 +24,26 @@ resource "aws_subnet" "sub1" {
 }
 
 resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.myvpc.id
+  vpc_id = vpc-04a7169d1c305bff8
 }
 
 resource "aws_route_table" "RT" {
-  vpc_id = aws_vpc.myvpc.id
+  vpc_id = vpc-04a7169d1c305bff8
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.igw.id
+    gateway_id = igw-0e57faa6dae8f962f
   }
 }
 
 resource "aws_route_table_association" "rta1" {
-  subnet_id      = aws_subnet.sub1.id
-  route_table_id = aws_route_table.RT.id
+  subnet_id      = subnet-0283e537af8b7a51c
+  route_table_id = subnet-0283e537af8b7a51c
 }
 
 resource "aws_security_group" "webSg" {
   name   = "web"
-  vpc_id = aws_vpc.myvpc.id
+  vpc_id = vpc-04a7169d1c305bff8
 
   ingress {
     description = "HTTP from VPC"
@@ -77,7 +77,7 @@ resource "aws_instance" "server" {
   instance_type          = "t3.micro"
   key_name      = aws_key_pair.example.key_name
   vpc_security_group_ids = ["sg-0a010a20127d34e45"]
-  subnet_id              = "subnet-03465ffb835f65865"
+subnet_id              = "subnet-0283e537af8b7a51c"
 
   connection {
     type        = "ssh"
