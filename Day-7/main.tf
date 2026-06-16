@@ -3,27 +3,27 @@ provider "aws" {
 }
 
 provider "vault" {
-  address = "<>:8200"
+  address = "98.81.238.77:8200"
   skip_child_token = true
 
   auth_login {
     path = "auth/approle/login"
 
     parameters = {
-      role_id = "<>"
-      secret_id = "<>"
+      role_id = "3c3436dd-8674-b97f-8df6-9de934f07c9c"
+      secret_id = "15a6a5d0-d905-7524-b33c-65393aeca3b6"
     }
   }
 }
 
 data "vault_kv_secret_v2" "example" {
-  mount = "secret" // change it according to your mount
+  mount = "kv" // change it according to your mount
   name  = "test-secret" // change it according to your secret
 }
 
 resource "aws_instance" "my_instance" {
-  ami           = "ami-053b0d53c279acc90"
-  instance_type = "t2.micro"
+  ami           = "ami-0521cb2d60cfbb1a6"
+  instance_type = "t3.micro"
 
   tags = {
     Name = "test"
